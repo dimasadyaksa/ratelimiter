@@ -44,9 +44,11 @@ jobs:
       run: |
         go test -v ./... | tee test_output.txt | go-junit-report > report.xml
 
-    - name: Upload test report
-      uses: actions/upload-artifact@v4
+    - name: Test Report
+      uses: dorny/test-reporter@v2
+      if: ${{ !cancelled() }}       
       with:
-        name: test-report
-        path: report.xml
+        name: Go Tests           
+        path: report.xml    
+        reporter: jest-junit        
     
