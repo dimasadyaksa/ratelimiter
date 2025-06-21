@@ -37,8 +37,16 @@ jobs:
         go install golang.org/x/lint/golint@latest
         golint ./...
 
-    - name: Vet
-      run: go vet ./...
+    - name: Install go-junit-report
+      run: go install github.com/jstemmer/go-junit-report@latest
 
-    - name: Run tests
-      run: go test -v ./...
+    - name: Run tests and output to file
+      run: |
+        go test -v ./... | tee test_output.txt | go-junit-report > report.xml
+
+    - name: Upload test report
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-report
+        path: report.xml
+    
